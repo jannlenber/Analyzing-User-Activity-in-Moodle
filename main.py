@@ -45,12 +45,12 @@ while b == 1:
         visit_time = []
         chrome_time = []
         source_file = "C:/Users/" + user + "/AppData/Local/Google/Chrome/User Data/Default/History"
-        destination_file = "C:/Users/" + user + "/Downloads/History"
+        destination_file = os.path.join("history", "History")
 
         time.sleep(5)
         shutil.copy(source_file, destination_file)
 
-        con = sqlite3.connect("C:/Users/" + user + "/Downloads/History")
+        con = sqlite3.connect(destination_file)
 
         sub = 28805000000
         times = (int(chromeTime)) - sub
@@ -95,9 +95,9 @@ while x < numline - 1:
     duration += [("%d:%02d:%02d" % (hour, minutes, seconds))]
 
 image = pyautogui.screenshot(region=(1700, 100, 200, 50))
-image.save('C:/Users/'+ user +'/Desktop/user.jpg')
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'D:\Downloads\chromatic-trees-342514-99b2f35a2213.json'
-img = np.asarray(Image.open('C://Users//' + user + '//Desktop//user.jpg'))
+image.save('user.jpg')
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'chromatic-trees-342514-99b2f35a2213.json'
+img = np.asarray(Image.open('user.jpg'))
 success, encoded_image = cv2.imencode('.jpg', img)
 roi_image = encoded_image.tobytes()
 client = vision.ImageAnnotatorClient()
