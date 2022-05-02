@@ -123,7 +123,7 @@ df = data.drop(data.index[-1])
 df.to_csv('USER_ACTIVITY '+result+'.csv', encoding='utf-8', index=False)
 
 root = tkinter.Tk()
-root.title("User Activity ("+ result+)
+root.title("User Activity ("+ result+")")
 w, h = root.winfo_screenwidth(), root.winfo_screenheight()
 root.geometry("%dx%d+0+0" % (0.50 * w, 0.4 * h))
 
@@ -149,15 +149,13 @@ def displayontowindow():
     with open("USER_ACTIVITY ("+result+").csv", newline="") as file:
         reader = csv.reader(file)
 
-        # r and c tell us where to grigd the labels
         r = 0
         for col in reader:
             c = 0
             for row in col:
-                # i've added some styling
                 label = tkinter.Label(subframe, width=60, height=1,
                                       text=row, relief=tkinter.RIDGE)
-                label.grid(row=r, column=c)
+                label.grid(row=r, column=c)git
                 c += 1
             r += 1
 
