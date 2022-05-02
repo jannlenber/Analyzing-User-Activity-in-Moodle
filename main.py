@@ -47,7 +47,7 @@ while b == 1:
         source_file = "C:/Users/" + user + "/AppData/Local/Google/Chrome/User Data/Default/History"
         destination_file = "C:/Users/" + user + "/Downloads/History"
 
-        time.sleep(5)  # wait to update the history file
+        time.sleep(5)
         shutil.copy(source_file, destination_file)
 
         con = sqlite3.connect("C:/Users/" + user + "/Downloads/History")
@@ -94,22 +94,10 @@ while x < numline - 1:
     seconds %= 60
     duration += [("%d:%02d:%02d" % (hour, minutes, seconds))]
 
-new_col = duration
-data_new = pd.read_csv('USER_ACTIVITY.csv')
-data_new['Duration'] = pd.Series(new_col)
-data_new = data_new.fillna(0)
-data_new.to_csv('USER_ACTIVITY.csv', encoding='utf-8', index=False)
-
-data = pd.read_csv('USER_ACTIVITY.csv')
-data.drop('Chrome time', inplace=True, axis=1)
-data.to_csv('USER_ACTIVITY.csv', encoding='utf-8', index=False)
-
-
-
 image = pyautogui.screenshot(region=(1700, 100, 200, 50))
-image.save(r'C:\Users\JL FRANCISCO\Desktop\user.jpg')
+image.save('C:/Users/'+ user +'/Desktop/user.jpg')
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'D:\Downloads\chromatic-trees-342514-99b2f35a2213.json'
-img = np.asarray(Image.open('C://Users//JL FRANCISCO//Desktop//user.jpg'))
+img = np.asarray(Image.open('C://Users//' + user + '//Desktop//user.jpg'))
 success, encoded_image = cv2.imencode('.jpg', img)
 roi_image = encoded_image.tobytes()
 client = vision.ImageAnnotatorClient()
@@ -117,6 +105,23 @@ image = vision.Image(content=roi_image)
 response = client.text_detection(image=image)
 texts = response.text_annotations
 result = texts[0].description.strip()
+
+new_col = duration
+data_new = pd.read_csv('USER_ACTIVITY.csv')
+data_new['cheat'] = data_new['URL'].apply(lambda x: 'kimjejl' not in str(x) )
+data_new['Duration'] = pd.Series(new_col)
+data_new = data_new.fillna(0)
+data_new.to_csv('USER_ACTIVITY.csv', encoding='utf-8', index=False)
+
+new_col = [result]*len(data_new)
+data_new = pd.read_csv('USER_ACTIVITY.csv')
+data_new['Username'] = pd.Series(new_col)
+data_new = data_new.fillna(0)
+data_new.to_csv('USER_ACTIVITY.csv', encoding='utf-8', index=False)
+
+data = pd.read_csv('USER_ACTIVITY.csv')
+data.drop('Chrome time', inplace=True, axis=1)
+data.to_csv('USER_ACTIVITY.csv', encoding='utf-8', index=False)
 
 data = pd.read_csv('USER_ACTIVITY.csv')
 df = data.drop(data.index[-1])
@@ -141,12 +146,9 @@ def displayontowindow():
                             xscrollcommand=hscrollbar.set)
     vscrollbar.config(command=canvas.yview)
     hscrollbar.config(command=canvas.xview)
-
-    # Add controls here
     subframe = ttk.Frame(canvas)
 
-    # open file
-    with open("USER_ACTIVITY ("+result+").csv", newline="") as file:
+    with open("USER_ACTIVITY.csv", newline="") as file:
         reader = csv.reader(file)
 
         r = 0
@@ -159,7 +161,6 @@ def displayontowindow():
                 c += 1
             r += 1
 
-    # Packing everything
     subframe.pack(fill=tkinter.BOTH, expand=tkinter.TRUE)
     hscrollbar.pack(fill=tkinter.X, side=tkinter.BOTTOM, expand=tkinter.FALSE)
     vscrollbar.pack(fill=tkinter.Y, side=tkinter.RIGHT, expand=tkinter.FALSE)
