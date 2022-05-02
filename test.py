@@ -1,0 +1,1 @@
+import sys, types, os;has_mfs = sys.version_info > (3, 5);
