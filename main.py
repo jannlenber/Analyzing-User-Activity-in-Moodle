@@ -155,7 +155,7 @@ def displayontowindow():
             for row in col:
                 label = tkinter.Label(subframe, width=60, height=1,
                                       text=row, relief=tkinter.RIDGE)
-                label.grid(row=r, column=c)git
+                label.grid(row=r, column=c)
                 c += 1
             r += 1
 
