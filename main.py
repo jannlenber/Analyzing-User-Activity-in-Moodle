@@ -16,11 +16,8 @@ import os
 import pyautogui
 
 
-
 a = 1
 b = 1
-
-
 def date_to_webkit(date_string):
     epoch_start = datetime(1601, 1, 1)
     date_ = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
@@ -29,7 +26,7 @@ def date_to_webkit(date_string):
     return '{:<017d}'.format(diff.days * seconds_in_day + diff.seconds + diff.microseconds)
 
 while a == 1:
-    if pyautogui.locateOnScreen('QUIZ NAV.png', region=(1470,250,300,300), grayscale=True) != None:
+    if pyautogui.locateOnScreen('QUIZ NAV.png', grayscale=True) != None:
         date = datetime.now()
         dateString = date.strftime("%Y-%m-%d %H:%M:%S")
         a = 2
@@ -37,7 +34,11 @@ while a == 1:
         print("START AT " + dateString)
 
 while b == 1:
-    if pyautogui.locateOnScreen('COMPLETE.png', region=(50,200,600,350), grayscale=True) != None or pyautogui.locateOnScreen('COMPLETE2.png', region=(400,200,300,300), grayscale=True) != None:
+    if pyautogui.locateOnScreen('COMPLETE.png', grayscale=True) != None or pyautogui.locateOnScreen('COMPLETE2.png', region=(400,200,300,300), grayscale=True) != None:
+        date = datetime.now()
+        dateEnd = date.strftime("%Y-%m-%d %H:%M:%S")
+        endTime = date_to_webkit(dateEnd)
+        print("COMPLETED AT " + dateEnd)
         b = 2
         user = os.getlogin()
         urls = []
@@ -108,8 +109,8 @@ result = texts[0].description.strip()
 
 new_col = duration
 data_new = pd.read_csv('USER_ACTIVITY.csv')
-data_new['cheat'] = data_new['URL'].apply(lambda x: 'kimjejl' not in str(x) )
 data_new['Duration'] = pd.Series(new_col)
+data_new['Other Activities'] = data_new['URL'].apply(lambda x: 'pre-final-thesis' not in str(x) )
 data_new = data_new.fillna(0)
 data_new.to_csv('USER_ACTIVITY.csv', encoding='utf-8', index=False)
 
@@ -127,53 +128,4 @@ data = pd.read_csv('USER_ACTIVITY.csv')
 df = data.drop(data.index[-1])
 df.to_csv('USER_ACTIVITY '+result+'.csv', encoding='utf-8', index=False)
 
-root = tkinter.Tk()
-root.title("User Activity ("+ result+")")
-w, h = root.winfo_screenwidth(), root.winfo_screenheight()
-root.geometry("%dx%d+0+0" % (0.50 * w, 0.4 * h))
 
-
-def displayontowindow():
-    frame = Frame(root, width=300, height=200, bg="light grey")
-
-    frame = ttk.Frame(root, width=200, height=150)
-
-    # Canvas creation with double scrollbar
-    hscrollbar = ttk.Scrollbar(frame, orient=tkinter.HORIZONTAL)
-    vscrollbar = ttk.Scrollbar(frame, orient=tkinter.VERTICAL)
-    sizegrip = ttk.Sizegrip(frame)
-    canvas = tkinter.Canvas(frame, bd=0, highlightthickness=0, yscrollcommand=vscrollbar.set,
-                            xscrollcommand=hscrollbar.set)
-    vscrollbar.config(command=canvas.yview)
-    hscrollbar.config(command=canvas.xview)
-    subframe = ttk.Frame(canvas)
-
-    with open("USER_ACTIVITY.csv", newline="") as file:
-        reader = csv.reader(file)
-
-        r = 0
-        for col in reader:
-            c = 0
-            for row in col:
-                label = tkinter.Label(subframe, width=60, height=1,
-                                      text=row, relief=tkinter.RIDGE)
-                label.grid(row=r, column=c)
-                c += 1
-            r += 1
-
-    subframe.pack(fill=tkinter.BOTH, expand=tkinter.TRUE)
-    hscrollbar.pack(fill=tkinter.X, side=tkinter.BOTTOM, expand=tkinter.FALSE)
-    vscrollbar.pack(fill=tkinter.Y, side=tkinter.RIGHT, expand=tkinter.FALSE)
-    sizegrip.pack(in_=hscrollbar, side=BOTTOM, anchor="se")
-    canvas.pack(side=tkinter.LEFT, padx=5, pady=5, fill=tkinter.BOTH, expand=tkinter.TRUE)
-    frame.pack(padx=5, pady=5, expand=True, fill=tkinter.BOTH)
-
-    canvas.create_window(0, 0, window=subframe)
-    root.update_idletasks()  # update geometry
-    canvas.config(scrollregion=canvas.bbox("all"))
-    canvas.xview_moveto(0)
-    canvas.yview_moveto(0)
-
-displayontowindow()
-
-root.mainloop()
