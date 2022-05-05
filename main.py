@@ -1,13 +1,11 @@
+from csv import writer
 from datetime import datetime
 import sqlite3
 import pandas
+from pandas import *
 import shutil
 import time
 import pandas as pd
-import csv
-from tkinter import *
-from tkinter import ttk
-import tkinter
 from google.cloud import vision
 from PIL import Image
 import cv2
@@ -128,4 +126,30 @@ data = pd.read_csv('USER_ACTIVITY.csv')
 df = data.drop(data.index[-1])
 df.to_csv('USER_ACTIVITY '+result+'.csv', encoding='utf-8', index=False)
 
+seconds = ((int(endTime) - int(chromeTime)) / 1000000)
+seconds = seconds % (24 * 3600)
+hour = seconds // 3600
+seconds %= 3600
+minutes = seconds // 60
+seconds %= 60
+totalDuration = ("%d:%02d:%02d" % (hour, minutes, seconds))
 
+data = read_csv('USER_ACTIVITY '+result+'.csv')
+url = data['Other Activities'].tolist()
+count = 0
+with open('USER_ACTIVITY '+result+'.csv', 'r') as f:
+    for line in f:
+        count += 1
+
+from collections import Counter
+counts = Counter(url)
+true = counts[True]
+false = counts[False]
+percentage = (true/count)*100
+
+resultss = 'TOTAL:'+str(count), 'TOTAL:'+str(count), dateString+' to '+dateEnd, 'Total Duration: '+totalDuration, 'Percentage of other Activites: '+str(percentage)+'%'
+
+with open('USER_ACTIVITY '+result+'.csv', 'a', newline='') as f_object:
+    writer_object = writer(f_object)
+    writer_object.writerow(resultss)
+    f_object.close()
